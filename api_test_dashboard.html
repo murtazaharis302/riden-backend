@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog API Tester - Riden</title>
+    <style>
+        :root {
+            --primary: #00eeff;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --accent: #3b82f6;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        input,
+        textarea,
+        select {
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            color: #0f172a;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+            grid-column: span 2;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .blog-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .blog-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 16px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .blog-info h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .blog-info p {
+            margin: 5px 0 0;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            grid-column: auto;
+        }
+
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: #0f172a;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+            }
+
+            to {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Riden Blog CRUD Tester</h1>
+        <p class="subtitle">Visually Click and Test Create, Update, and Delete</p>
+
+        <div class="card">
+            <h2>Add New Blog</h2>
+            <div class="form-grid">
+                <input type="text" id="title" placeholder="Blog Title" value="New Dynamic Blog">
+                <input type="text" id="category" placeholder="Category" value="Technology">
+                <input type="text" id="image" placeholder="Image URL" value="https://via.placeholder.com/150">
+                <input type="date" id="date" value="2024-03-09">
+                <textarea id="short_description" placeholder="Short Description"
+                    style="grid-column: span 2;">This is a dynamically created blog post via the API.</textarea>
+                <textarea id="content" placeholder="Full Content"
+                    style="grid-column: span 2;">Detailed content goes here...</textarea>
+                <button onclick="createBlog()">Create Blog</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Test Contact Us Form</h2>
+            <div class="form-grid">
+                <input type="text" id="c_name" placeholder="Full Name" value="Test User">
+                <input type="email" id="c_email" placeholder="Email Address" value="test@example.com">
+                <input type="text" id="c_phone" placeholder="Phone Number" value="+123456789">
+                <input type="text" id="c_budget" placeholder="Project Budget" value="$1000 - $5000">
+                <textarea id="c_inquiry" placeholder="Inquiry Message"
+                    style="grid-column: span 2;">Hello, I am interested in your services.</textarea>
+                <button onclick="sendContact()">Send Inquiry</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Test Newsletter Subscription</h2>
+            <div class="form-grid">
+                <input type="email" id="n_email" placeholder="Email Address" value="news@example.com"
+                    style="grid-column: span 2;">
+                <button onclick="subscribeNewsletter()">Subscribe</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Current Footer Settings</h2>
+            <div id="settingsDisplay"
+                style="background: #0f172a; padding:15px; border-radius:8px; margin-bottom:20px; font-family: monospace; font-size: 0.9em; white-space: pre-wrap; border: 1px solid #334155;">
+                Loading settings...
+            </div>
+            <button class="btn-sm" style="width: auto; margin-bottom: 20px;" onclick="fetchSettings()">Refresh
+                Settings</button>
+
+            <h2 style="margin-top: 20px;">Update Setting</h2>
+            <div class="form-grid">
+                <input type="text" id="s_key" placeholder="Key (e.g. phone)">
+                <input type="text" id="s_value" placeholder="New Value">
+                <button onclick="updateSetting()" class="btn-sm" style="grid-column: span 2;">Update</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin:0;">Existing Blogs</h2>
+                <button class="btn-sm" style="width: auto;" onclick="fetchBlogs()">Refresh List</button>
+            </div>
+            <div id="blogList" class="blog-list">
+                <!-- Blogs will appear here -->
+                <p style="text-align: center; color: #64748b;">Loading blogs...</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Success!</div>
+
+    <script>
+        const API_URL = 'http://localhost:8000/api/blogs';
+        const CONTACT_URL = 'http://localhost:8000/api/contact';
+
+        const NEWSLETTER_URL = 'http://localhost:8000/api/newsletter';
+        const SETTINGS_URL = 'http://localhost:8000/api/settings';
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 3000);
+        }
+
+        async function subscribeNewsletter() {
+            const email = document.getElementById('n_email').value;
+            try {
+                const response = await fetch(NEWSLETTER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                if (response.ok) {
+                    showToast('Subscribed Successfully!');
+                } else {
+                    const res = await response.json();
+                    alert('Error: ' + (res.message || 'Subscription failed'));
+                }
+            } catch (err) {
+                alert('Connection Error!');
+            }
+        }
+
+        async function fetchSettings() {
+            try {
+                const response = await fetch(SETTINGS_URL);
+                const result = await response.json();
+                document.getElementById('settingsDisplay').innerText = JSON.stringify(result, null, 4);
+            } catch (err) {
+                document.getElementById('settingsDisplay').innerText = 'Error loading settings.';
+            }
+        }
+
+        async function updateSetting() {
+            const key = document.getElementById('s_key').value;
+            const value = document.getElementById('s_value').value;
+            if (!key) return alert('Key is required');
+
+            const data = {};
+            data[key] = value;
+
+            try {
+                const response = await fetch(SETTINGS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (response.ok) {
+                    showToast('Setting Updated!');
+                    fetchSettings();
+                }
+            } catch (err) {
+                alert('Error updating setting.');
+            }
+        }
+
+        async function sendContact() {
+            const data = {
+                name: document.getElementById('c_name').value,
+                email: document.getElementById('c_email').value,
+                phone: document.getElementById('c_phone').value,
+                budget: document.getElementById('c_budget').value,
+                inquiry: document.getElementById('c_inquiry').value
+            };
+
+            try {
+                const response = await fetch(CONTACT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    showToast('Inquiry Sent Successfully!');
+                    console.log(result);
+                } else {
+                    alert('Validation Error: ' + JSON.stringify(result.errors));
+                }
+            } catch (err) {
+                alert('Connection Error! Make sure php artisan serve is running.');
+            }
+        }
+
+        async function fetchBlogs() {
+            try {
+                const response = await fetch(API_URL);
+                const blogs = await response.json();
+                const list = document.getElementById('blogList');
+                list.innerHTML = '';
+
+                if (blogs.length === 0) {
+                    list.innerHTML = '<p style="text-align: center; color: #64748b;">No blogs found.</p>';
+                    return;
+                }
+
+                blogs.forEach(blog => {
+                    const div = document.createElement('div');
+                    div.className = 'blog-item';
+                    div.innerHTML = `
+                        <div class="blog-info">
+                            <h3>${blog.title}</h3>
+                            <p>${blog.category} | ID: ${blog.id}</p>
+                        </div>
+                        <div class="actions">
+                            <button class="btn-sm btn-delete" onclick="deleteBlog(${blog.id})">Delete</button>
+                        </div>
+                    `;
+                    list.appendChild(div);
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function createBlog() {
+            const data = {
+                title: document.getElementById('title').value,
+                category: document.getElementById('category').value,
+                image: document.getElementById('image').value,
+                published_at: document.getElementById('date').value,
+                short_description: document.getElementById('short_description').value,
+                content: document.getElementById('content').value,
+                status: 'published'
+            };
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (response.ok) {
+                    showToast('Blog Created Successfully!');
+                    fetchBlogs();
+                }
+            } catch (err) {
+                alert('Connection Error! Make sure php artisan serve is running.');
+            }
+        }
+
+        async function deleteBlog(id) {
+            if (!confirm('Are you sure?')) return;
+            try {
+                await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+                showToast('Blog Deleted!');
+                fetchBlogs();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Initial Load
+        fetchBlogs();
+        fetchSettings();
+    </script>
+</body>
+
+</html>
