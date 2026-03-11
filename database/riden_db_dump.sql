@@ -1,5 +1,5 @@
 -- RidenTech Database Dump
--- Generated on 2026-03-10 12:54:01
+-- Generated on 2026-03-11 05:27:11
 
 TRUNCATE TABLE blogs;
 INSERT INTO blogs (id, title, slug, category, image, short_description, content, published_at, is_featured, status, created_at, updated_at) VALUES ('1', 'Revolutionizing Business with AI', 'revolutionizing-business-with-ai', 'AI & Machine Learning', 'https://via.placeholder.com/640x480.png/00eeff?text=AI+Blog', 'Discover how Riden is using AI to transform modern enterprises.', 'Full blog content for AI transformation goes here...', '2026-03-10', '1', 'published', '2026-03-10 08:49:22', '2026-03-10 08:49:22');
